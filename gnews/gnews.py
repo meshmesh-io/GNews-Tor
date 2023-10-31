@@ -5,6 +5,7 @@ import urllib.request
 import datetime
 import inspect
 import warnings
+import requests
 
 import feedparser
 from bs4 import BeautifulSoup as Soup
@@ -302,15 +303,20 @@ class GNews:
         url = BASE_URL + query + self._ceid()
         try:
             if self._proxy:
-                proxy_handler = urllib.request.ProxyHandler(self._proxy)
-                feed_data = feedparser.parse(url, agent=USER_AGENT, handlers=[proxy_handler])
+                proxies = {
+                    "http": self._proxy,
+                    "https": self._proxy,
+                }
+                response = requests.get(url, headers={"User-Agent": USER_AGENT}, proxies=proxies)
+                response.raise_for_status()  # Check for a valid response
+                feed_data = feedparser.parse(response.content)
             else:
                 feed_data = feedparser.parse(url, agent=USER_AGENT)
 
             return [item for item in
                     map(self._process, feed_data.entries[:self._max_results]) if item]
         except Exception as err:
-            logger.error(err.args[0])
+            logger.error(err)
             return []
 
     def store_in_mongodb(self, news):
