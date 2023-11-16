@@ -21,7 +21,7 @@ setup(
     long_description_content_type="text/markdown",
     packages=find_packages(),
     install_requires=requirements,
-    url='https://github.com/ranahaani/GNews/',
+    url='https://github.com/meshmesh-io/GNews-Tor/',
     project_urls={
         'Documentation': 'https://github.com/ranahaani/GNews/blob/master/README.md',
         'Source': 'https://github.com/ranahaani/GNews/',
